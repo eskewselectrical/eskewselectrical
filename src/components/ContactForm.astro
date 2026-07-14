@@ -1,0 +1,132 @@
+---
+import { business, services, cities } from '../data/site';
+const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
+---
+
+<section id="contact" class="mx-auto max-w-6xl px-4 py-16 md:py-24">
+  <div class="grid gap-10 md:grid-cols-2">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-widest text-volt-400">Contact</p>
+      <h2 class="mt-2 font-display text-3xl font-semibold md:text-4xl">
+        Request a <span class="current-line">free quote</span>
+      </h2>
+      <p class="mt-4 leading-relaxed text-ash-300">
+        Tell us what you need and we'll get back to you fast. Prefer to talk?
+        {business.hours} —
+        <a href={business.phoneHref} class="font-semibold text-volt-400 hover:text-volt-300">
+          {business.phone}
+        </a>.
+      </p>
+      <p class="mt-4 text-sm leading-relaxed text-ash-400">
+        Serving {cities.slice(0, 6).join(', ')}, and all of {business.areaLabel}.
+        No project is too big or too small.
+      </p>
+    </div>
+
+    <form id="contact-form" class="space-y-4" novalidate>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label for="name" class="mb-1 block text-sm font-medium text-ash-300">Name *</label>
+          <input
+            id="name" name="name" type="text" required autocomplete="name"
+            class="w-full rounded border border-charcoal-600 bg-charcoal-800 px-3 py-2 text-ash-100 placeholder-ash-500 focus:border-volt-500"
+          />
+        </div>
+        <div>
+          <label for="phone" class="mb-1 block text-sm font-medium text-ash-300">Phone *</label>
+          <input
+            id="phone" name="phone" type="tel" required autocomplete="tel"
+            class="w-full rounded border border-charcoal-600 bg-charcoal-800 px-3 py-2 text-ash-100 placeholder-ash-500 focus:border-volt-500"
+          />
+        </div>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label for="email" class="mb-1 block text-sm font-medium text-ash-300">Email (optional)</label>
+          <input
+            id="email" name="email" type="email" autocomplete="email"
+            class="w-full rounded border border-charcoal-600 bg-charcoal-800 px-3 py-2 text-ash-100 placeholder-ash-500 focus:border-volt-500"
+          />
+        </div>
+        <div>
+          <label for="city" class="mb-1 block text-sm font-medium text-ash-300">City</label>
+          <input
+            id="city" name="city" type="text" placeholder="e.g. Tupelo"
+            class="w-full rounded border border-charcoal-600 bg-charcoal-800 px-3 py-2 text-ash-100 placeholder-ash-500 focus:border-volt-500"
+          />
+        </div>
+      </div>
+      <div>
+        <label for="service" class="mb-1 block text-sm font-medium text-ash-300">What do you need?</label>
+        <select
+          id="service" name="service"
+          class="w-full rounded border border-charcoal-600 bg-charcoal-800 px-3 py-2 text-ash-100 focus:border-volt-500"
+        >
+          {services.map((s) => <option value={s.title}>{s.title}</option>)}
+          <option value="Something else">Something else</option>
+        </select>
+      </div>
+      <div>
+        <label for="message" class="mb-1 block text-sm font-medium text-ash-300">Message *</label>
+        <textarea
+          id="message" name="message" rows="4" required
+          placeholder="Tell us a little about the job…"
+          class="w-full rounded border border-charcoal-600 bg-charcoal-800 px-3 py-2 text-ash-100 placeholder-ash-500 focus:border-volt-500"
+        ></textarea>
+      </div>
+
+      <div class="cf-turnstile" data-sitekey={siteKey} data-theme="dark"></div>
+
+      <button
+        type="submit"
+        id="submit-btn"
+        class="w-full rounded bg-volt-500 px-4 py-3 font-semibold text-charcoal-950 transition-colors hover:bg-volt-400 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto sm:px-8"
+      >
+        Send request
+      </button>
+      <p id="form-status" class="text-sm" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const status = document.getElementById('form-status');
+  const btn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    if (!status || !btn) return;
+
+    btn.disabled = true;
+    status.textContent = 'Sending…';
+    status.className = 'text-sm text-ash-400';
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        body: new FormData(form),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        form.reset();
+        // reset turnstile widget for a possible second submission
+        (window as any).turnstile?.reset?.();
+        status.textContent = "Request sent. We'll be in touch shortly — or call us anytime.";
+        status.className = 'text-sm font-medium text-volt-400';
+      } else {
+        status.textContent =
+          data?.error ?? 'Something went wrong sending your request. Please call us instead.';
+        status.className = 'text-sm font-medium text-red-400';
+      }
+    } catch {
+      status.textContent = 'Network error. Please try again or give us a call.';
+      status.className = 'text-sm font-medium text-red-400';
+    } finally {
+      btn.disabled = false;
+    }
+  });
+</script>

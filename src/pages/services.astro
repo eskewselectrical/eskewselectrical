@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CircuitDivider from '../components/CircuitDivider.astro';
+import ServicePhoto from '../components/ServicePhoto.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { business, services } from '../data/site';
+
+const title =
+  "Electrical Services — Generators, Troubleshooting & More | Eskew's Electrical Service";
+const description =
+  "Residential and commercial electrical service, troubleshooting, generator installation, and overhead door repair in Tupelo, Fulton, Amory, Oxford, Columbus and across Northeast Mississippi. Licensed & bonded, available 24/7.";
+---
+
+<BaseLayout title={title} description={description}>
+  <section class="bg-charcoal-850">
+    <div class="mx-auto max-w-6xl px-4 py-16 md:py-20">
+      <p class="text-sm font-semibold uppercase tracking-widest text-volt-400">Services</p>
+      <h1 class="mt-3 max-w-3xl font-display text-4xl font-bold leading-tight md:text-5xl">
+        Everything we do, <span class="current-line">done right</span>
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-ash-300">
+        Licensed and bonded electrical work for homes, businesses, and light
+        industrial buildings across {business.areaLabel}. {business.hours} —
+        <a href={business.phoneHref} class="font-semibold text-volt-400 hover:text-volt-300">
+          {business.phone}
+        </a>.
+      </p>
+    </div>
+  </section>
+
+  <CircuitDivider />
+
+  <div class="mx-auto max-w-6xl space-y-16 px-4 py-16 md:space-y-24 md:py-24">
+    {
+      services.map((s, i) => (
+        <section id={s.slug} class="grid items-center gap-8 md:grid-cols-2">
+          <div class={i % 2 === 1 ? 'md:order-2' : ''}>
+            {s.secondary && (
+              <p class="mb-2 text-xs font-semibold uppercase tracking-widest text-ash-500">
+                Also offering
+              </p>
+            )}
+            <h2 class="font-display text-2xl font-semibold text-ash-100 md:text-3xl">
+              {s.title}
+            </h2>
+            <p class="mt-4 leading-relaxed text-ash-300">{s.description}</p>
+            <a
+              href="/#contact"
+              class="mt-6 inline-block rounded bg-volt-500 px-5 py-2.5 text-sm font-semibold text-charcoal-950 transition-colors hover:bg-volt-400"
+            >
+              Get a quote for {s.title.toLowerCase()}
+            </a>
+          </div>
+          <div
+            class={`overflow-hidden rounded-lg border border-charcoal-700 ${i % 2 === 1 ? 'md:order-1' : ''}`}
+          >
+            <ServicePhoto slug={s.slug} title={s.title} class="aspect-[4/3]" />
+          </div>
+        </section>
+      ))
+    }
+  </div>
+
+  <CircuitDivider />
+  <ContactForm />
+</BaseLayout>

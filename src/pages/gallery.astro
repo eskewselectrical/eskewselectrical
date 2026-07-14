@@ -1,0 +1,56 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CircuitDivider from '../components/CircuitDivider.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { business } from '../data/site';
+import { galleryImages } from '../data/images';
+
+const title = "Project Gallery — Our Electrical Work | Eskew's Electrical Service";
+const description =
+  "See recent electrical work by Eskew's Electrical Service across Northeast Mississippi — commercial lighting, residential installs, troubleshooting jobs, and more in Tupelo, Fulton, Amory, and surrounding areas.";
+---
+
+<BaseLayout title={title} description={description}>
+  <section class="bg-charcoal-850">
+    <div class="mx-auto max-w-6xl px-4 py-16 md:py-20">
+      <p class="text-sm font-semibold uppercase tracking-widest text-volt-400">Gallery</p>
+      <h1 class="mt-3 font-display text-4xl font-bold leading-tight md:text-5xl">
+        Work we're <span class="current-line">proud of</span>
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-ash-300">
+        A look at recent jobs around {business.areaLabel} — lighting,
+        wiring, installs, and everything in between.
+      </p>
+    </div>
+  </section>
+
+  <CircuitDivider />
+
+  <section class="mx-auto max-w-6xl px-4 py-16 md:py-24">
+    {
+      galleryImages.length > 0 ? (
+        <div class="columns-2 gap-4 md:columns-3 [&>*]:mb-4">
+          {galleryImages.map(({ image, alt }) => (
+            <div class="overflow-hidden rounded-lg border border-charcoal-700">
+              <Image
+                src={image}
+                alt={alt}
+                class="w-full"
+                widths={[400, 800]}
+                sizes="(min-width: 768px) 33vw, 50vw"
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p class="text-ash-400">
+          Photos coming soon — drop images into <code>src/images/gallery/</code>.
+        </p>
+      )
+    }
+  </section>
+
+  <CircuitDivider />
+  <ContactForm />
+</BaseLayout>

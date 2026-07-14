@@ -1,0 +1,175 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import CircuitDivider from '../components/CircuitDivider.astro';
+import ServicePhoto from '../components/ServicePhoto.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { business, services, cities } from '../data/site';
+import { galleryImages } from '../data/images';
+
+const title = "Electrician in Tupelo, Fulton & Northeast MS | Eskew's Electrical Service";
+const description =
+  "Licensed and bonded electrician serving Tupelo, Fulton, Amory, Oxford, Columbus, Starkville and all of Northeast Mississippi. Residential & commercial electrical, troubleshooting, generator installation, and overhead door repair. Call anytime — open 24/7.";
+
+const galleryStrip = galleryImages.slice(0, 4);
+const primaryServices = services.filter((s) => !s.secondary);
+const secondaryServices = services.filter((s) => s.secondary);
+---
+
+<BaseLayout title={title} description={description}>
+  <Hero />
+
+  <CircuitDivider />
+
+  <!-- Services strip -->
+  <section id="services" class="mx-auto max-w-6xl px-4 py-16 md:py-24">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-widest text-volt-400">What we do</p>
+        <h2 class="mt-2 font-display text-3xl font-semibold md:text-4xl">Electrical services</h2>
+      </div>
+      <a href="/services" class="font-semibold text-volt-400 hover:text-volt-300">
+        View all services →
+      </a>
+    </div>
+
+    <div class="mt-10 grid gap-6 sm:grid-cols-2">
+      {
+        primaryServices.map((s) => (
+          <a
+            href={`/services#${s.slug}`}
+            class="group rounded-lg border border-charcoal-700 bg-charcoal-850 p-6 transition-colors hover:border-volt-500/60"
+          >
+            <h3 class="font-display text-xl font-semibold text-ash-100 group-hover:text-volt-300">
+              {s.title}
+            </h3>
+            <p class="mt-2 text-sm leading-relaxed text-ash-400">{s.short}</p>
+          </a>
+        ))
+      }
+    </div>
+    {
+      secondaryServices.map((s) => (
+        <a
+          href={`/services#${s.slug}`}
+          class="group mt-6 block rounded-lg border border-dashed border-charcoal-600 p-5 transition-colors hover:border-volt-500/60"
+        >
+          <h3 class="font-display text-lg font-semibold text-ash-300 group-hover:text-volt-300">
+            Also offering: {s.title}
+          </h3>
+          <p class="mt-1 text-sm text-ash-400">{s.short}</p>
+        </a>
+      ))
+    }
+  </section>
+
+  <CircuitDivider />
+
+  <!-- Gallery strip -->
+  <section class="mx-auto max-w-6xl px-4 py-16 md:py-24">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-widest text-volt-400">Our work</p>
+        <h2 class="mt-2 font-display text-3xl font-semibold md:text-4xl">Recent jobs</h2>
+      </div>
+      <a href="/gallery" class="font-semibold text-volt-400 hover:text-volt-300">
+        View full gallery →
+      </a>
+    </div>
+
+    <div class="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4">
+      {
+        galleryStrip.map(({ image, alt }) => (
+          <a href="/gallery" class="group overflow-hidden rounded-lg border border-charcoal-700">
+            <Image
+              src={image}
+              alt={alt}
+              class="aspect-square h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              widths={[300, 600]}
+              sizes="(min-width: 768px) 25vw, 50vw"
+            />
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <CircuitDivider />
+
+  <!-- About -->
+  <section id="about" class="mx-auto max-w-6xl px-4 py-16 md:py-24">
+    <div class="grid items-center gap-10 md:grid-cols-2">
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-widest text-volt-400">About us</p>
+        <h2 class="mt-2 font-display text-3xl font-semibold md:text-4xl">
+          A contractor you can <span class="current-line">count on</span>
+        </h2>
+        <p class="mt-6 leading-relaxed text-ash-300">
+          Eskew's Electrical Service is a trusted electrical contractor proudly
+          serving residential, commercial, and light industrial customers with
+          dependable, high-quality workmanship. We specialize in electrical
+          installations, repairs, service upgrades, generator installations,
+          lighting, and troubleshooting, with a commitment to safety, integrity,
+          and customer satisfaction.
+        </p>
+        <p class="mt-4 leading-relaxed text-ash-300">
+          Owned and operated by {business.owner}, we take pride in delivering
+          reliable solutions, honest communication, and professional service
+          our customers can count on — anywhere in {business.areaLabel},
+          any hour of the day.
+        </p>
+        <ul class="mt-6 grid gap-3 text-sm font-medium text-ash-100 sm:grid-cols-2">
+          {
+            [
+              'Licensed & bonded',
+              `${business.yearsInBusiness} years in business`,
+              'Available 24/7',
+              'Residential, commercial & light industrial',
+            ].map((item) => (
+              <li class="flex items-center gap-2">
+                <svg class="h-4 w-4 shrink-0 text-volt-400" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M13 2 4.5 13.5H11L9.5 22 19 9.5h-6.5L13 2z" />
+                </svg>
+                {item}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="overflow-hidden rounded-lg border border-charcoal-700">
+        <ServicePhoto slug="commercial" title="Commercial electrical work" class="aspect-[4/3]" />
+      </div>
+    </div>
+  </section>
+
+  <CircuitDivider />
+
+  <!-- Service areas -->
+  <section class="mx-auto max-w-6xl px-4 py-16">
+    <p class="text-sm font-semibold uppercase tracking-widest text-volt-400">Where we work</p>
+    <h2 class="mt-2 font-display text-3xl font-semibold md:text-4xl">
+      Serving {business.areaLabel}
+    </h2>
+    <p class="mt-4 max-w-3xl leading-relaxed text-ash-300">
+      Based in North Mississippi and on the road every day, we provide
+      electrical service, troubleshooting, and generator installation in:
+    </p>
+    <ul class="mt-6 flex flex-wrap gap-2">
+      {
+        cities.map((city) => (
+          <li class="rounded-full border border-charcoal-600 bg-charcoal-850 px-4 py-1.5 text-sm text-ash-300">
+            {city}, MS
+          </li>
+        ))
+      }
+      <li class="rounded-full border border-volt-500/50 px-4 py-1.5 text-sm font-medium text-volt-300">
+        + surrounding communities
+      </li>
+    </ul>
+  </section>
+
+  <CircuitDivider />
+
+  <ContactForm />
+</BaseLayout>

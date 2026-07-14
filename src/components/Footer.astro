@@ -1,0 +1,68 @@
+---
+import { business, cities } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-charcoal-700/60 bg-charcoal-950 pb-20 sm:pb-0">
+  <div class="mx-auto grid max-w-6xl gap-10 px-4 py-12 md:grid-cols-3">
+    <div>
+      <h2 class="font-display text-xl font-semibold text-ash-100">
+        {business.name}
+      </h2>
+      <p class="mt-3 text-sm leading-relaxed text-ash-400">
+        Licensed and bonded electrical contractor serving homes and businesses
+        across {business.areaLabel}. {business.hours}.
+      </p>
+      <a
+        href={business.facebook}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="mt-4 inline-flex items-center gap-2 text-sm font-medium text-volt-400 hover:text-volt-300"
+      >
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path
+            d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12"
+          ></path>
+        </svg>
+        Find us on Facebook
+      </a>
+    </div>
+
+    <div>
+      <h2 class="font-display text-xl font-semibold text-ash-100">Contact</h2>
+      <ul class="mt-3 space-y-2 text-sm text-ash-400">
+        <li>
+          <a href={business.phoneHref} class="font-semibold text-volt-400 hover:text-volt-300">
+            {business.phone}
+          </a>
+          <span class="ml-1">— {business.hours.toLowerCase()}</span>
+        </li>
+        <li>
+          <a href={`mailto:${business.email}`} class="hover:text-volt-300">
+            {business.email}
+          </a>
+        </li>
+        <li>{business.yearsInBusiness} years in business · Licensed &amp; bonded</li>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="font-display text-xl font-semibold text-ash-100">Areas We Serve</h2>
+      <p class="mt-3 text-sm leading-relaxed text-ash-400">
+        {cities.map((c, i) => (
+          <>
+            <span>{c}, MS</span>
+            {i < cities.length - 1 && ' · '}
+          </>
+        ))}
+        — and surrounding {business.areaLabel} communities.
+      </p>
+    </div>
+  </div>
+
+  <div class="border-t border-charcoal-800">
+    <p class="mx-auto max-w-6xl px-4 py-4 text-xs text-ash-500">
+      © {year} {business.name}. All rights reserved.
+    </p>
+  </div>
+</footer>

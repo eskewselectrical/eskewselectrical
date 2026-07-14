@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { business } from '../data/site';
+---
+
+<BaseLayout
+  title="Page Not Found | Eskew's Electrical Service"
+  description="The page you're looking for doesn't exist. Head back to Eskew's Electrical Service — Northeast Mississippi's 24/7 electrician."
+>
+  <section class="mx-auto flex max-w-6xl flex-col items-start px-4 py-24 md:py-36">
+    <p class="font-display text-7xl font-bold text-volt-500">404</p>
+    <h1 class="mt-4 font-display text-3xl font-semibold md:text-4xl">
+      Looks like this circuit is <span class="current-line">open</span>
+    </h1>
+    <p class="mt-4 max-w-xl leading-relaxed text-ash-300">
+      The page you're looking for doesn't exist. Head back home, or give us a
+      call — we're available 24/7 at
+      <a href={business.phoneHref} class="font-semibold text-volt-400 hover:text-volt-300">
+        {business.phone}
+      </a>.
+    </p>
+    <a
+      href="/"
+      class="mt-8 rounded bg-volt-500 px-6 py-3 font-semibold text-charcoal-950 transition-colors hover:bg-volt-400"
+    >
+      Back to home
+    </a>
+  </section>
+</BaseLayout>

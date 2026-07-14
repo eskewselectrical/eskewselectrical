@@ -1,0 +1,94 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { business } from '../data/site';
+
+/**
+ * Drop ONE image into src/images/hero/ and it becomes the hero background
+ * (first alphabetically wins if there are several). No code changes needed.
+ * Recommended: landscape, at least 1920px wide. A dark gradient overlay is
+ * applied automatically so the text stays readable over any photo.
+ * If the folder is empty, the hero falls back to the circuit-trace backdrop.
+ */
+const heroGlobs = import.meta.glob<{ default: ImageMetadata }>(
+  '../images/hero/*.{jpg,jpeg,png,webp}',
+  { eager: true }
+);
+const heroEntries = Object.entries(heroGlobs).sort(([a], [b]) => a.localeCompare(b));
+const heroImage = heroEntries.length > 0 ? heroEntries[0][1].default : null;
+---
+
+<section class="relative overflow-hidden bg-charcoal-850">
+  {
+    heroImage ? (
+      <>
+        <Image
+          src={heroImage}
+          alt=""
+          class="absolute inset-0 h-full w-full object-cover"
+          widths={[800, 1280, 1920]}
+          sizes="100vw"
+          loading="eager"
+          fetchpriority="high"
+          aria-hidden="true"
+        />
+        {/* Legibility overlay: solid on the text side, fading right so the photo shows */}
+        <div
+          class="absolute inset-0 bg-gradient-to-r from-charcoal-950/95 via-charcoal-950/80 to-charcoal-950/40"
+          aria-hidden="true"
+        />
+        <div
+          class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-charcoal-900 to-transparent"
+          aria-hidden="true"
+        />
+      </>
+    ) : (
+      <svg
+        class="pointer-events-none absolute inset-0 h-full w-full text-volt-500/[0.07]"
+        aria-hidden="true"
+        preserveAspectRatio="xMidYMid slice"
+        viewBox="0 0 800 400"
+        fill="none"
+        stroke="currentColor"
+      >
+        <path d="M-20 80 H180 l30 30 H420 l20 -20 H820" stroke-width="1.5" />
+        <path d="M-20 320 H240 l24 -24 H560 l30 30 H820" stroke-width="1.5" />
+        <path d="M120 -20 V90 l40 40 v120" stroke-width="1.5" />
+        <path d="M640 420 V300 l-30 -30 V140" stroke-width="1.5" />
+        <circle cx="210" cy="110" r="5" fill="currentColor" stroke="none" />
+        <circle cx="440" cy="90" r="5" fill="currentColor" stroke="none" />
+        <circle cx="610" cy="270" r="5" fill="currentColor" stroke="none" />
+      </svg>
+    )
+  }
+
+  <div class="relative mx-auto max-w-6xl px-4 py-20 md:py-28">
+    <p class="text-sm font-semibold uppercase tracking-widest text-volt-400">
+      Licensed &amp; bonded · {business.yearsInBusiness} years in business
+    </p>
+    <h1 class="mt-4 max-w-3xl font-display text-4xl font-bold leading-tight md:text-6xl">
+      Northeast Mississippi's electrician —
+      <span class="current-line">on call 24/7</span>
+    </h1>
+    <p class="mt-6 max-w-2xl text-lg leading-relaxed text-ash-300">
+      Residential and commercial electrical service, expert troubleshooting,
+      and standby generator installation for Tupelo, Fulton, Amory, and
+      communities across {business.areaLabel}. Great customer service, honest
+      communication — no project is too big or too small.
+    </p>
+    <div class="mt-8 flex flex-wrap gap-4">
+      <a
+        href={business.phoneHref}
+        class="rounded bg-volt-500 px-6 py-3 font-semibold text-charcoal-950 transition-colors hover:bg-volt-400"
+      >
+        Call {business.phone}
+      </a>
+      <a
+        href="#contact"
+        class="rounded border border-ash-500/50 px-6 py-3 font-semibold text-ash-100 transition-colors hover:border-volt-400 hover:text-volt-300"
+      >
+        Request a quote
+      </a>
+    </div>
+  </div>
+</section>

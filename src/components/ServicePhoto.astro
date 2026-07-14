@@ -1,0 +1,37 @@
+---
+import { Image } from 'astro:assets';
+import { serviceImage } from '../data/images';
+
+interface Props {
+  slug: string;
+  title: string;
+  class?: string;
+}
+
+const { slug, title, class: className = '' } = Astro.props;
+const img = serviceImage(slug);
+---
+
+{
+  img ? (
+    <Image
+      src={img}
+      alt={`${title} — Eskew's Electrical Service`}
+      class={`h-full w-full object-cover ${className}`}
+      widths={[480, 800, 1200]}
+      sizes="(min-width: 768px) 50vw, 100vw"
+    />
+  ) : (
+    <div
+      class={`flex h-full w-full flex-col items-center justify-center gap-3 bg-charcoal-800 p-8 text-center ${className}`}
+    >
+      <svg class="h-12 w-12 text-volt-500/70" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M13 2 4.5 13.5H11L9.5 22 19 9.5h-6.5L13 2z" />
+      </svg>
+      <p class="text-sm font-medium text-ash-400">{title} photo coming soon</p>
+      <p class="text-xs text-ash-500">
+        (drop an image into <code>src/images/services/{slug}/</code>)
+      </p>
+    </div>
+  )
+}
