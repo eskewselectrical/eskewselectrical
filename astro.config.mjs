@@ -11,6 +11,9 @@ export default defineConfig({
   adapter: vercel({
     webAnalytics: { enabled: true }
   }),
+  security: {
+    checkOrigin: false,
+  },
   integrations: [
     sitemap({
       filter: (page) => !page.includes('/api/'),
