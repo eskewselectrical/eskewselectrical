@@ -83,10 +83,13 @@ const jsonLd = {
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
-    <!--
-      GOOGLE ANALYTICS: paste your GA4 snippet here (see README.md,
-      "Google Analytics" section) and remove this comment.
-    -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script is:inline>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
   </head>
   <body class="bg-charcoal-900 text-ash-100">
     <Header />
